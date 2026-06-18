@@ -10,25 +10,9 @@ const app = new App({
   socketMode: true
 });
 
-const WORDS = [
-  "serendipity", "ephemeral", "eloquent", "resilient", "luminous", "ubiquitous",
-  "gregarious", "tenacious", "candor", "lucid", "astute", "nuance", "intricate",
-  "meticulous", "pragmatic", "benevolent", "diligent", "empathy", "fortitude",
-  "gratitude", "humility", "ingenious", "jubilant", "labyrinth", "mellow",
-  "nostalgia", "oblivion", "panacea", "quaint", "radiant", "serene", "tranquil",
-  "upheaval", "venerate", "whimsical", "zeal", "aesthetic", "brevity", "cathartic",
-  "dexterity", "enigma", "fervent", "gusto", "harmony", "idyllic", "juxtapose",
-  "keen", "lavish", "myriad", "novel"
-];
+const WORDS = [ "serendipity", "ephemeral", "eloquent", "resilient", "luminous", "ubiquitous", "gregarious", "tenacious", "candor", "lucid", "astute", "nuance", "intricate", "meticulous", "pragmatic", "benevolent", "diligent", "empathy", "fortitude", "gratitude", "humility", "ingenious", "jubilant", "labyrinth", "mellow", "nostalgia", "oblivion", "panacea", "quaint", "radiant", "serene", "tranquil", "upheaval", "venerate", "whimsical", "zeal", "aesthetic", "brevity", "cathartic", "dexterity", "enigma", "fervent", "gusto", "harmony", "idyllic", "juxtapose", "keen", "lavish", "myriad", "novel"];
 
-const COUNTRIES = [
-  "Japan", "Brazil", "Iceland", "Kenya", "Norway", "Peru", "Vietnam", "Morocco",
-  "Greece", "Nepal", "Chile", "Finland", "Egypt", "Portugal", "Thailand", "Mexico",
-  "Sweden", "India", "Argentina", "Indonesia", "Canada", "Ireland", "Croatia",
-  "Austria", "Switzerland", "Colombia", "Philippines", "Poland", "Denmark",
-  "Hungary", "Ecuador", "Tanzania", "Jordan", "Malaysia", "Sri Lanka", "Ghana",
-  "Bolivia", "Estonia", "Uruguay", "Mongolia"
-];
+const COUNTRIES = [ "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo (Democratic Republic of)", "Congo (Republic of)", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia (Czech Republic)", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini (Swaziland)", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Holy See (Vatican City)", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar (Burma)", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey (Türkiye)", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"];
 
 app.command("/almanac-wotd", async ({ command, ack, respond }) => {
   await ack();
@@ -218,15 +202,10 @@ app.command("/almanac-today", async ({ command, ack, respond }) => {
   await respond({
     text:
 `${word}
-
 ${fact}
-
 ${history}
-
 ${quote}
-
 ${numberFact}
-
 ${country}`
   });
 });

@@ -2,7 +2,7 @@
 
 A Slack bot I made that sends a daily collection of cool information right into your workspace. Every digest includes a word of the day, a fun fact, something that happened on this day in history, and a quote.
 
-> ![Project Screenshot](images/screenshot.png)
+![Project Screenshot](images/screenshot.png)
 
 [TRY IT HERE](http://app.slack.com/client/E09V59WQY1E/C0BBD17T3QB)
 

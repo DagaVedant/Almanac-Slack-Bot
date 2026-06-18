@@ -4,7 +4,7 @@ A Slack bot I made that sends a daily collection of cool information right into 
 
 > ![Project Screenshot](images/screenshot.png)
 
-![TRY IT HERE](http://app.slack.com/client/E09V59WQY1E/C0BBD17T3QB)
+[TRY IT HERE](http://app.slack.com/client/E09V59WQY1E/C0BBD17T3QB)
 
 ## Quick Start
 

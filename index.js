@@ -112,7 +112,7 @@ app.command("/almanac-today", async ({ command, ack, respond }) => {
   let word;
   try {
     const w = WORDS[dayTimestamp % WORDS.length];
-    const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${w}`);
+    const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${w}`, { timeout: 5000 });
     const entry = response.data[0];
     const meaning = entry.meanings[0];
     const def = meaning.definitions[0];
@@ -125,22 +125,23 @@ app.command("/almanac-today", async ({ command, ack, respond }) => {
   // 2. Fact of the Day
   let fact;
   try {
-    const response = await axios.get("https://uselessfacts.jsph.pl/api/v2/facts/today?language=en");
+    const response = await axios.get("https://uselessfacts.jsph.pl/api/v2/facts/today?language=en", { timeout: 5000 });
     fact = `*Fact of the Day:*\n${response.data.text}`;
   } catch (err) {
     fact = "*Fact of the Day:* Couldn't load a fact right now, oh well.";
   }
 
-  // 3. History (With Deduplication Check)
+  // 3. History
   let history;
   try {
     const monthStr = String(currentMonthNum).padStart(2, "0");
     const dateStr = String(currentDateNum).padStart(2, "0");
     const response = await axios.get(`https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/${monthStr}/${dateStr}`, {
-      headers: { "User-Agent": "almanac-bot" }
+      headers: { "User-Agent": "almanac-bot" },
+      timeout: 5000
     });
     
-    const events = response.data.selected.slice(0, 5); // Grab a few extra to account for duplicates
+    const events = response.data.selected.slice(0, 5);
     const seenEvents = new Set();
     const uniqueLines = [];
 
@@ -150,7 +151,7 @@ app.command("/almanac-today", async ({ command, ack, respond }) => {
         seenEvents.add(line);
         uniqueLines.push(line);
       }
-      if (uniqueLines.length === 3) break; // Stop once we have 3 unique historical events
+      if (uniqueLines.length === 3) break;
     }
 
     history = `*On This Day:*\n${uniqueLines.join("\n")}`;
@@ -161,26 +162,26 @@ app.command("/almanac-today", async ({ command, ack, respond }) => {
   // 4. Quote of the Day
   let quote;
   try {
-    const response = await axios.get("https://zenquotes.io/api/today");
+    const response = await axios.get("https://zenquotes.io/api/today", { timeout: 5000 });
     const q = response.data[0];
     quote = `*Quote of the Day:*\n"${q.q}"\n- ${q.a}`;
   } catch (err) {
     quote = "*Quote of the Day:* Couldn't load a quote right now.";
   }
 
-  // 5. Number Fact
+  // 5. Number Fact (Switched to HTTPS)
   let numberFact;
   try {
-    const response = await axios.get(`http://numbersapi.com/${currentMonthNum}/${currentDateNum}/date?json`, { timeout: 4000 });
+    const response = await axios.get(`https://numbersapi.com/${currentMonthNum}/${currentDateNum}/date?json`, { timeout: 5000 });
     numberFact = `*Number Fact:*\n${response.data.text}`;
   } catch (err) {
     numberFact = "*Number Fact:* Couldn't load a number fact right now.";
   }
 
-  // 6. Country of the Day
+  // 6. Country of the Day (Removed fullText constraint for broader matching)
   let country;
   try {
-    const response = await axios.get(`https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}?fullText=true`, { timeout: 4000 });
+    const response = await axios.get(`https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}`, { timeout: 5000 });
     const countryData = response.data[0];
 
     const capital = countryData.capital?.[0] ?? "Unknown";

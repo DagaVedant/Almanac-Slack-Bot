@@ -1,5 +1,7 @@
 # Almanac Bot
 
+![logo](images/logo.png)
+
 A Slack bot I made that sends a daily collection of cool information right into your workspace. Every digest includes a word of the day, a fun fact, something that happened on this day in history, and a quote.
 
 ![Project Screenshot](images/screenshot.png)

@@ -108,6 +108,7 @@ app.command("/almanac-today", async ({ command, ack, respond }) => {
   const currentDateNum = now.getDate();
   const countryName = COUNTRIES[dayTimestamp % COUNTRIES.length];
 
+  // 1. Word of the Day
   let word;
   try {
     const w = WORDS[dayTimestamp % WORDS.length];
@@ -115,20 +116,22 @@ app.command("/almanac-today", async ({ command, ack, respond }) => {
     const entry = response.data[0];
     const meaning = entry.meanings[0];
     const def = meaning.definitions[0];
-    word = `Word of the Day: ${entry.word}\n(${meaning.partOfSpeech}) ${def.definition}`;
-    if (def.example) word += `\nExample: ${def.example}`;
+    word = `*Word of the Day:* ${entry.word}\n(${meaning.partOfSpeech}) ${def.definition}`;
+    if (def.example) word += `\n_Example:_ ${def.example}`;
   } catch (err) {
-    word = "Couldn't grab today's word, try again in a bit.";
+    word = "*Word of the Day:* Couldn't grab today's word, try again in a bit.";
   }
 
+  // 2. Fact of the Day
   let fact;
   try {
     const response = await axios.get("https://uselessfacts.jsph.pl/api/v2/facts/today?language=en");
-    fact = `Fact of the Day:\n${response.data.text}`;
+    fact = `*Fact of the Day:*\n${response.data.text}`;
   } catch (err) {
-    fact = "Couldn't load a fact right now, oh well.";
+    fact = "*Fact of the Day:* Couldn't load a fact right now, oh well.";
   }
 
+  // 3. History (With Deduplication Check)
   let history;
   try {
     const monthStr = String(currentMonthNum).padStart(2, "0");
@@ -136,36 +139,48 @@ app.command("/almanac-today", async ({ command, ack, respond }) => {
     const response = await axios.get(`https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/${monthStr}/${dateStr}`, {
       headers: { "User-Agent": "almanac-bot" }
     });
-    const events = response.data.selected.slice(0, 3);
-    history = "On This Day:";
+    
+    const events = response.data.selected.slice(0, 5); // Grab a few extra to account for duplicates
+    const seenEvents = new Set();
+    const uniqueLines = [];
+
     for (const event of events) {
-      history += `\n${event.year} - ${event.text}`;
+      const line = `${event.year} - ${event.text}`;
+      if (!seenEvents.has(line)) {
+        seenEvents.add(line);
+        uniqueLines.push(line);
+      }
+      if (uniqueLines.length === 3) break; // Stop once we have 3 unique historical events
     }
+
+    history = `*On This Day:*\n${uniqueLines.join("\n")}`;
   } catch (err) {
-    history = "Couldn't load today's history, try again later.";
+    history = "*On This Day:* Couldn't load today's history, try again later.";
   }
 
+  // 4. Quote of the Day
   let quote;
   try {
     const response = await axios.get("https://zenquotes.io/api/today");
     const q = response.data[0];
-    quote = `Quote of the Day:\n"${q.q}"\n- ${q.a}`;
+    quote = `*Quote of the Day:*\n"${q.q}"\n- ${q.a}`;
   } catch (err) {
-    quote = "Couldn't load a quote right now.";
+    quote = "*Quote of the Day:* Couldn't load a quote right now.";
   }
 
+  // 5. Number Fact
   let numberFact;
   try {
-    const response = await axios.get(`http://numbersapi.com/${currentMonthNum}/${currentDateNum}/date?json`);
-    numberFact = `Number Fact:\n${response.data.text}`;
+    const response = await axios.get(`http://numbersapi.com/${currentMonthNum}/${currentDateNum}/date?json`, { timeout: 4000 });
+    numberFact = `*Number Fact:*\n${response.data.text}`;
   } catch (err) {
-    console.error("Number Fact Error:", err.message);
-    numberFact = "Couldn't load a number fact right now.";
+    numberFact = "*Number Fact:* Couldn't load a number fact right now.";
   }
 
+  // 6. Country of the Day
   let country;
   try {
-    const response = await axios.get(`https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}?fullText=true`);
+    const response = await axios.get(`https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}?fullText=true`, { timeout: 4000 });
     const countryData = response.data[0];
 
     const capital = countryData.capital?.[0] ?? "Unknown";
@@ -173,12 +188,12 @@ app.command("/almanac-today", async ({ command, ack, respond }) => {
     const population = countryData.population.toLocaleString();
     const languages = countryData.languages ? Object.values(countryData.languages).join(", ") : "Unknown";
 
-    country = `Country of the Day: ${countryData.flag} ${countryData.name.common}\nCapital: ${capital}\nRegion: ${region}\nPopulation: ${population}\nLanguages: ${languages}`;
+    country = `*Country of the Day:* ${countryData.flag || ""} ${countryData.name.common}\n• *Capital:* ${capital}\n• *Region:* ${region}\n• *Population:* ${population}\n• *Languages:* ${languages}`;
   } catch (err) {
-    console.error("Country Error:", err.message);
-    country = "Couldn't load today's country, try again later.";
+    country = `*Country of the Day:* Couldn't load today's country (${countryName}), try again later.`;
   }
 
+  // Combine everything cleanly using Markdown spacing
   await respond({
     text: `${word}\n\n${fact}\n\n${history}\n\n${quote}\n\n${numberFact}\n\n${country}`
   });

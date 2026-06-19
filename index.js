@@ -8,7 +8,9 @@ const app = new App({
   socketMode: true
 });
 
-const WORDS = [ "serendipity", "ephemeral", "eloquent", "resilient", "luminous", "ubiquitous", "gregarious", "tenacious", "candor", "lucid", "astute", "nuance", "intricate", "meticulous", "pragmatic", "benevolent", "diligent", "empathy", "fortitude", "gratitude", "humility", "ingenious", "jubilant", "labyrinth", "mellow", "nostalgia", "oblivion", "panacea", "quaint", "radiant", "serene", "tranquil", "upheaval", "venerate", "whimsical", "zeal", "aesthetic", "brevity", "cathartic", "dexterity", "enigma", "fervent", "gusto", "harmony", "idyllic", "juxtapose", "keen", "lavish", "myriad", "novel"];
+const WORDS = [ 
+  "serendipity", "ephemeral", "eloquent", "resilient", "luminous", "ubiquitous", "gregarious", "tenacious", "candor", "lucid", "astute", "nuance", "intricate", "meticulous", "pragmatic", "benevolent", "diligent", "empathy", "fortitude", "gratitude", "humility", "ingenious", "jubilant", "labyrinth", "mellow", "nostalgia", "oblivion", "panacea", "quaint", "radiant", "serene", "tranquil", "upheaval", "venerate", "whimsical", "zeal", "aesthetic", "brevity", "cathartic", "dexterity", "enigma", "fervent", "gusto", "harmony", "idyllic", "juxtapose", "keen", "lavish", "myriad", "novel"
+];
 
 app.command("/almanac-wotd", async ({ command, ack, respond }) => {
   await ack();
